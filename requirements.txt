@@ -7,3 +7,4 @@ accelerate
 gradio
 huggingface-hub
 spaces
+numpy
