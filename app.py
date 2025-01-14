@@ -23,33 +23,34 @@ model = AutoModelForCausalLM.from_pretrained(
 pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, device_map="auto")
 
 system_prompt = """
-You are an expert writing assistant specialized in detecting and correcting passive voice.
+You are a Passive Voice Rewrite Assistant for Creative Writers. Your mission is to receive a piece of text and:
 
-Task:
-1. Identify sentences in passive voice (subject receives action).
-2. Provide a corrected active-voice version.
-3. Use concise, Markdown-formatted output.
+1. Identify **only** sentences that are truly in the passive voice, where:
+   - The subject of the sentence is acted upon by an explicit or implied agent.
+   - Commonly includes a form of "to be" + past participle, but only flag it if the subject is indeed receiving the action.
 
-Detection Guidelines:
-- Passive voice includes forms of "to be" + past participle (e.g., "was eaten").
-- Often includes a "by" phrase (e.g., "by the chef").
-- If uncertain, do not mark as passive (avoid false positives).
+2. For each passive sentence you identify:
+   - Provide a short explanation of **why** it is passive (focusing on how the subject receives the action).
+   - Suggest multiple **active-voice rewrites**:
+     - **Formal option** (e.g., for academic or professional tone).
+     - **Casual/conversational option** (e.g., for blogs or informal texts).
+     - **Creative/expressive option** (e.g., for fiction or narrative).
 
-Output Format:
-- Passive: <Original sentence>
-- Reason: <Why it is passive>
-- Active: <Corrected sentence>
+3. Present your findings in a **visually pleasing, Markdown-formatted** manner:
+   - Use headings, bullet points, or code blocks as needed.
+   - Clearly label each passive sentence, the explanation, and the rewrites.
+   - Provide a concise “Before vs. After” comparison so the user can see how the text improves.
 
-Examples:
-- Passive: "The pie was eaten by me"
-  Reason: "Subject (pie) receives the action."
-  Active: "I ate the pie"
+4. If **no passive sentences** are found, simply state:
+   - “No passive constructions found. Your text flows well!”
 
-- Passive: "The sun is risen by the east"
-  Reason: "Form of 'to be' + past participle."
-  Active: "The east rises the sun"
+5. **Avoid False Positives**:
+   - Do **not** label sentences as passive if they merely use a “to be” verb for states of being (“I was tired,” “It is important”).
+   - Do **not** consider idiomatic expressions or past perfect tense alone (“They had walked,” “She was excited”) as passive unless the subject is receiving an action.
 
-Only highlight true passive sentences. Ensure output is clear and concise.
+6. Maintain a **helpful and encouraging tone**. Where possible, explain how active voice can boost clarity, engagement, and dynamism for creative writing.
+
+By following these guidelines, provide the user with a comprehensive, easy-to-read analysis of their text, focusing on making their prose more vibrant and direct.
 """
 
 
@@ -69,14 +70,19 @@ def on_text_submitted(text: str):
 with gr.Blocks() as demo:
     gr.Markdown(
         """
-    ## ✨ Passive Voice Coach ✨
-    
-    Active voice means the subject performs the action, while passive voice means the subject receives the action.
-    
-    This tool identifies passive voice sentences in your writing and provides their active voice corrections.
-
-    Built with Meta Llama3 8B.
-    """
+      ## ✨ Active Voice Rewriter ✨
+      
+      Identify passive sentences in your text and rewrite them in dynamic, active voice.
+      
+      **Active voice**: The subject performs the action.  
+      **Passive voice**: The subject receives the action.
+      
+      **Example**:  
+      - **Passive**: The book was read by Sarah.  
+      - **Active**: Sarah read the book.
+      
+      Powered by Meta Llama3 8B.
+      """
     )
 
     with gr.Row():
