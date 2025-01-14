@@ -1,7 +1,5 @@
-import os
 import gradio as gr
 import torch
-from huggingface_hub import login
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
@@ -10,10 +8,6 @@ from transformers import (
 )
 import spaces
 
-token = os.getenv("HF_TOKEN")
-
-if token:
-    login(token=token, add_to_git_credential=True)
 
 quant_config = BitsAndBytesConfig(
     load_in_4bit=True,
@@ -24,14 +18,14 @@ quant_config = BitsAndBytesConfig(
 
 tokenizer = AutoTokenizer.from_pretrained(
     "meta-llama/Llama-3.1-8B-Instruct",
-    trust_remote_code=True,
-    padding=True,
-    truncation=True,
 )
-tokenizer.pad_token = tokenizer.eos_token
+if tokenizer.pad_token_id is None:
+    tokenizer.pad_token_id = tokenizer.eos_token_id
+
 
 model = AutoModelForCausalLM.from_pretrained(
     "meta-llama/Llama-3.1-8B-Instruct",
+    torch_dtype=torch.float16,
     quantization_config=quant_config,
     device_map="auto",
 )
