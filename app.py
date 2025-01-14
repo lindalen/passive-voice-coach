@@ -3,6 +3,7 @@ from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
     pipeline,
+    TextIteratorStreamer,
 )
 import spaces
 
@@ -61,27 +62,39 @@ def on_text_submitted(text: str):
     system_message = {"role": "system", "content": system_prompt}
     user_message = {"role": "user", "content": user_prompt_for(text)}
     messages = [system_message, user_message]
-    outputs = pipe(
-        messages,
-        max_new_tokens=3000,
-    )
+    outputs = pipe(messages, max_new_tokens=3000)
     return outputs[0]["generated_text"][-1]["content"]
 
 
 with gr.Blocks() as demo:
-    gr.Markdown("## ✨ Passive to Active Voice Converter ✨")
+    gr.Markdown(
+        """
+    ## ✨ Passive Voice Coach ✨
+    
+    Active voice means the subject performs the action, while passive voice means the subject receives the action.
+    
+    This tool identifies passive voice sentences in your writing and provides their active voice corrections.
+
+    Built with Meta Llama3 8B.
+    """
+    )
 
     with gr.Row():
         input_text = gr.Textbox(
-            label="Your text:", lines=10, placeholder="Enter text here..."
+            label="✏️ Enter your writing below:",
+            lines=10,
+            placeholder="Enter text here...",
         )
+        output_text = gr.Markdown(label="🤖 Response:")
     with gr.Row():
-        submit_button = gr.Button("Analyze & Convert")
-        clear_button = gr.Button("Clear")
+        clear_button = gr.Button("🗑️ Clear")
+        submit_button = gr.Button("📩 Send")
 
-    output_text = gr.Markdown(label="Analysis & Suggestions (Markdown Format)")
-
-    submit_button.click(on_text_submitted, inputs=[input_text], outputs=[output_text])
+    submit_button.click(
+        on_text_submitted,
+        inputs=[input_text],
+        outputs=[output_text],
+    )
     clear_button.click(lambda: ("", ""), inputs=[], outputs=[input_text, output_text])
 
 demo.launch(server_name="0.0.0.0", server_port=7860)
