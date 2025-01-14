@@ -1,0 +1,7 @@
+torch
+bitsandbytes
+transformers
+sentencepiece
+accelerate
+gradio
+huggingface-hub
