@@ -8,6 +8,7 @@ from transformers import (
     BitsAndBytesConfig,
     pipeline,
 )
+import spaces
 
 token = os.getenv("HF_TOKEN")
 
@@ -72,6 +73,7 @@ def user_prompt_for(text: str):
     return f"Please analyze this writing and return passive voice sentences corrected to active voice:\n{text}"
 
 
+@spaces.GPU
 def on_text_submitted(text: str):
     system_message = {"role": "system", "content": system_prompt}
     user_message = {"role": "user", "content": user_prompt_for(text)}
