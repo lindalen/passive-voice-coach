@@ -1,8 +1,8 @@
 --extra-index-url https://download.pytorch.org/whl/cu113
-torch
-bitsandbytes
-transformers
+torch==2.2.0
+git+https://github.com/huggingface/transformers/
 sentencepiece
+bitsandbytes
 accelerate
 gradio
 huggingface-hub
