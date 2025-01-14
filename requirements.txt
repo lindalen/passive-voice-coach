@@ -1,7 +1,3 @@
-torch
 transformers
 sentencepiece
-bitsandbytes
 accelerate
-huggingface-hub
-numpy==1.26.4

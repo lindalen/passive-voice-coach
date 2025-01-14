@@ -1,20 +1,11 @@
 import gradio as gr
-import torch
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
-    BitsAndBytesConfig,
     pipeline,
 )
 import spaces
 
-
-quant_config = BitsAndBytesConfig(
-    load_in_4bit=True,
-    bnb_4bit_use_double_quant=True,
-    bnb_4bit_compute_dtype=torch.bfloat16,
-    bnb_4bit_quant_type="nf4",
-)
 
 tokenizer = AutoTokenizer.from_pretrained(
     "meta-llama/Llama-3.1-8B-Instruct",
@@ -25,8 +16,6 @@ if tokenizer.pad_token_id is None:
 
 model = AutoModelForCausalLM.from_pretrained(
     "meta-llama/Llama-3.1-8B-Instruct",
-    torch_dtype=torch.float16,
-    quantization_config=quant_config,
     device_map="auto",
 )
 
