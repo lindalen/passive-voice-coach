@@ -8,7 +8,7 @@ sdk_version: 5.12.0
 app_file: app.py
 pinned: false
 license: mit
-short_description: Identifies passive sentences and converts them to active voice dynamically.
+short_description: Converts writing to use a dynamic, active voice.
 ---
 
 # ✨ Active Voiceifyer ✨
