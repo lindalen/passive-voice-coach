@@ -53,6 +53,17 @@ By following these guidelines, provide the user with a comprehensive, easy-to-re
 """
 
 
+def clean_response(response: str) -> str:
+    """
+    Removes 'assistant\n\n' from the start of the response if it exists.
+    """
+    return (
+        response.lstrip("assistant\n\n")
+        if response.startswith("assistant\n\n")
+        else response
+    )
+
+
 def user_prompt_for(text: str):
     return f"Please analyze this writing and return passive voice sentences corrected to active voice:\n{text}"
 
@@ -78,7 +89,7 @@ def on_text_submitted(message: str):
 
         for chunk in streamer:
             response_buffer += chunk
-            formatted_response_buffer = response_buffer
+            formatted_response_buffer = clean_response(response_buffer)
 
             yield formatted_response_buffer
 
