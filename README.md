@@ -1,6 +1,6 @@
 ---
-title: Passive Voice Coach
-emoji: 🐠
+title: ✨ Active Voiceifyer ✨
+emoji: ✏️
 colorFrom: green
 colorTo: blue
 sdk: gradio
@@ -8,20 +8,29 @@ sdk_version: 5.12.0
 app_file: app.py
 pinned: false
 license: mit
-short_description: Converts passive voice sentences to active voice.
+short_description: Identifies passive sentences and converts them to active voice dynamically.
 ---
 
-# Passive Voice Coach
+# ✨ Active Voiceifyer ✨
 
-🎯 **Convert passive voice sentences into active voice, effortlessly.**
+🎯 **Write with clarity and impact.**  
+Active Voiceifyer transforms your writing by identifying and rewriting passive sentences in a dynamic, active voice. Powered by Meta Llama3 8B, it ensures that only the changes that genuinely improve your text are made.
 
-📝 **Features:**
+## 📝 Features
 
-- Detects passive voice sentences.
-- Provides concise, Markdown-formatted corrections.
-- Clear explanations for why a sentence is passive.
+- 🕵️ Detects passive voice sentences with precision.
+- 🔄 Converts them to active voice dynamically and only when it improves readability.
+- 📄 Provides Markdown-formatted revisions for easy integration.
+- 💡 Includes clear explanations for each transformation.
 
-🚀 **Get Started:**  
-Visit the app: [Passive Voice Coach](https://huggingface.co/spaces/lindalen/passive-voice-coach)
+## 🚀 Get Started
 
-🔗 **License:** MIT
+Visit the app: [✨ Active Voiceifyer ✨](https://huggingface.co/spaces/lindalen/active-voiceifyer)
+
+1. Enter your text into the input box.
+2. Review the revised text and explanations provided.
+3. Refine your writing effortlessly!
+
+## 📜 License
+
+Licensed under the MIT License.
