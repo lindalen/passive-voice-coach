@@ -1,3 +1,5 @@
+import torch
+import spaces
 import gradio as gr
 from transformers import (
     AutoTokenizer,
@@ -5,8 +7,7 @@ from transformers import (
     pipeline,
     TextIteratorStreamer,
 )
-import spaces
-
+from threading import Thread
 
 tokenizer = AutoTokenizer.from_pretrained(
     "meta-llama/Llama-3.1-8B-Instruct",
@@ -14,13 +15,11 @@ tokenizer = AutoTokenizer.from_pretrained(
 if tokenizer.pad_token_id is None:
     tokenizer.pad_token_id = tokenizer.eos_token_id
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model = AutoModelForCausalLM.from_pretrained(
     "meta-llama/Llama-3.1-8B-Instruct",
-    device_map="auto",
-)
-
-pipe = pipeline("text-generation", model=model, tokenizer=tokenizer, device_map="auto")
+).to(device)
 
 system_prompt = """
 You are a Passive Voice Rewrite Assistant for Creative Writers. Your mission is to receive a piece of text and:
@@ -59,12 +58,29 @@ def user_prompt_for(text: str):
 
 
 @spaces.GPU
-def on_text_submitted(text: str):
-    system_message = {"role": "system", "content": system_prompt}
-    user_message = {"role": "user", "content": user_prompt_for(text)}
-    messages = [system_message, user_message]
-    outputs = pipe(messages, max_new_tokens=3000)
-    return outputs[0]["generated_text"][-1]["content"]
+def on_text_submitted(message: str):
+    conversation = [{"role": "system", "content": system_prompt}]
+    conversation.append({"role": "user", "content": user_prompt_for(message)})
+
+    inputs = tokenizer.apply_chat_template(conversation, return_tensors="pt").to(device)
+
+    streamer = TextIteratorStreamer(
+        tokenizer, timeout=60.0, skip_prompt=True, skip_special_tokens=True
+    )
+
+    generate_kwargs = dict(input_ids=inputs, max_new_tokens=3000, streamer=streamer)
+
+    response_buffer = ""
+
+    with torch.no_grad():
+        thread = Thread(target=model.generate, kwargs=generate_kwargs)
+        thread.start()
+
+        for chunk in streamer:
+            response_buffer += chunk
+            formatted_response_buffer = response_buffer
+
+            yield formatted_response_buffer
 
 
 with gr.Blocks() as demo:
