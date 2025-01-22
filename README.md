@@ -25,7 +25,7 @@ Active Voiceifyer transforms your writing by identifying and rewriting passive s
 
 ## 🚀 Get Started
 
-Visit the app: [✨ Active Voiceifyer ✨](https://huggingface.co/spaces/lindalen/active-voiceifyer)
+Visit the app: [✨ Active Voiceifyer ✨](https://huggingface.co/spaces/lindalen/passive-voice-coach)
 
 1. Enter your text into the input box.
 2. Review the revised text and explanations provided.
